@@ -1,13 +1,4 @@
-class Usuario:
-    def __init__(self, nome, data_nascimento, cpf, endereco):
-        self.nome = nome
-        self.data_nascimento = data_nascimento
-        self.cpf = cpf
-        self.endereco = endereco
-
-    def __str__(self):
-        return f"Usuário {self.nome} - CPF {self.cpf}"
-
+from datetime import datetime 
 class ContaCorrente:
     contador_contas = 1
 
@@ -19,39 +10,65 @@ class ContaCorrente:
         self.saldo = 0.0
         self.depositos = []
         self.saques = []
+        self.transacoes_diarias = 0
         self.saques_diarios = 0
+        self.ultimo_dia_transacao = None
 
     def __str__(self):
         return f"Conta corrente {self.numero_conta} - Agência {self.agencia} - Usuário {self.usuario.nome}"
 
     def depositar(self, valor):
-        if valor > 0:
-            self.saldo += valor
-            self.depositos.append(valor)
-            print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
+        if self.transacoes_diarias < 10:
+            if valor > 0:
+                self.saldo += valor
+                self.depositos.append((valor, datetime.now()))
+                self.transacoes_diarias += 1
+                self.atualizar_ultimo_dia_transacao()
+                print(f"Depósito de R$ {valor:.2f} realizado com sucesso!")
+            else:
+                print("Valor de depósito inválido. Por favor, informe um valor positivo.")
         else:
-            print("Valor de depósito inválido. Por favor, informe um valor positivo.")
+            print("Você excedeu o número de transações permitidas no dia. Por favor, tente novamente amanhã.")
 
     def sacar(self, valor):
-        if self.saques_diarios < 3 and valor <= 500.0 and valor <= self.saldo:
-            self.saldo -= valor
-            self.saques.append(valor)
-            self.saques_diarios += 1
-            print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
-        elif self.saques_diarios >= 3:
-            print("Você já realizou 3 saques diários. Não é possível realizar mais saques hoje.")
-        elif valor > 500.0:
-            print("Valor de saque inválido. O limite máximo por saque é de R$ 500,00.")
+        if self.transacoes_diarias < 10:
+            if self.saques_diarios < 3 and valor <= 500.0 and valor <= self.saldo:
+                self.saldo -= valor
+                self.saques.append((valor, datetime.now()))
+                self.transacoes_diarias += 1
+                self.atualizar_ultimo_dia_transacao()
+                print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
+            elif self.saques_diarios >= 3:
+                print("Você já realizou 3 saques diários. Não é possível realizar mais saques hoje.")
+            elif valor > 500.0:
+                print("Valor de saque inválido. O limite máximo por saque é de R$ 500,00.")
+            else:
+                print("Você não tem saldo suficiente para realizar este saque.")
         else:
-            print("Você não tem saldo suficiente para realizar este saque.")
+            print("Você excedeu o número de transações permitidas no dia. Por favor, tente novamente amanhã.")
 
     def extrato(self):
         print("Extrato da Conta:")
         for deposito in self.depositos:
-            print(f"Depósito: R$ {deposito:.2f}")
+            print(f"Depósito: R$ {deposito[0]:.2f} em {deposito[1].strftime('%d-%m-%Y %H:%M:%S')}")
         for saque in self.saques:
-            print(f"Saque: R$ {saque:.2f}")
+            print(f"Saque: R$ {saque[0]:.2f} em {saque[1].strftime('%d-%m-%Y %H:%M:%S')}")
         print(f"Saldo atual: R$ {self.saldo:.2f}")
+
+    def atualizar_ultimo_dia_transacao(self):
+        hoje = datetime.now().date()
+        if self.ultimo_dia_transacao != hoje:
+            self.transacoes_diarias = 1
+            self.ultimo_dia_transacao = hoje
+        else:
+            self.transacoes_diarias += 1
+
+class Usuario:
+    def __init__(self, nome, data_nascimento, cpf, endereco):
+        self.nome = nome
+        self.data_nascimento = data_nascimento
+        self.cpf = cpf
+        self.endereco = endereco
 
 class Banco:
     def __init__(self):
@@ -62,7 +79,12 @@ class Banco:
         if cpf in [u.cpf for u in self.usuarios]:
             print("CPF já cadastrado. Não é possível cadastrar outro usuário com o mesmo CPF.")
             return
-        self.usuarios.append(Usuario(nome, data_nascimento, cpf, endereco))
+        try:
+            data_nascimento_obj = datetime.strptime(data_nascimento, "%d-%m-%Y")
+        except ValueError:
+            print("Data de nascimento inválida. Por favor, informe uma data no formato dd-mm-yyyy.")
+            return
+        self.usuarios.append(Usuario(nome, data_nascimento_obj, cpf, endereco))
         print(f"Usuário {nome} cadastrado com sucesso!")
 
     def cadastrar_conta(self, usuario_cpf):
