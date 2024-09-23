@@ -5,7 +5,7 @@
 <img src= "https://github.com/user-attachments/assets/3071fc46-505f-4f87-900e-2646877dea96" width="20%" height="20%"/>
 <img src= "https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg" width="10%" height="10%"/>
 
-<h1 align="center"><b>Repositório para o curso NTT DATA - Engenharia de Dados com Python </b></h1>
+<h1 align="center"><b>NTT DATA - Engenharia de Dados com Python </b></h1>
 
 
 <p align="center"> 
