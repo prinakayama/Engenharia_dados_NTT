@@ -20,9 +20,7 @@
 6. Manipulação de arquivos
 7. Gerenciamento de pacotes e boas práticas
 8. Banco de Dados
-9. Desenvolvimento de APIs com Flask
-10. Desenvolvimento Fullstack com Django
-11. APIs Assíncronas com FastAPI
-12. Projetos/Desafios
+9. Projetos/Desafios
+10. Projeto Pacote de Processamento de Imagens com Python
 
 ### Trilha Power BI
