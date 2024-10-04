@@ -24,3 +24,17 @@
 10. Projeto Pacote de Processamento de Imagens com Python
 
 ### Trilha Power BI
+
+1. Análise de Dados com SQL
+2. Primeiros passos com Power BI
+3. Criando Dashboards
+4. Visualização de dados com Power BI
+5. Coleta e Extração de Dados
+6. Limpeza e Transformação de Dados
+7. Modelagem de Dados com Power BI
+8. Primeiros passos com DAX e Cálculos no Power BI
+9. Projetos
+10. Primeiros passos de Data Analytics com Power BI
+11. Projetando Relatórios Pensando na Experiência do Cliente
+12. Storytelling com Dados 
+   
